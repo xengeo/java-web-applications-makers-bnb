@@ -2,26 +2,43 @@ package com.makers.makersbnb.controller;
 
 import com.makers.makersbnb.model.Space;
 import com.makers.makersbnb.repository.SpaceRepository;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
 // tell Spring Boot this class is a controller
 @RestController
 public class StaticPageController {
-    private final SpaceRepository spaceRepository;
-    public StaticPageController(SpaceRepository spaceRepository) {
-        this.spaceRepository = spaceRepository;
-    }
+
+//    Dependency Injection :
+    private final SpaceRepository spaceRepository; // Define field name as a SpaceRepository object
+    public StaticPageController(SpaceRepository spaceRepository) { // Setting up a constructor to take
+        this.spaceRepository = spaceRepository;                     // and assign a Space Repository object into the
+    }                                                                  // StaticPageController class as an instance field
 
     @GetMapping("/")
-    public ModelAndView welcome() {
-
+    public ModelAndView welcome(@AuthenticationPrincipal OAuth2User principal) {
         ModelAndView modelAndView = new ModelAndView("/LandingPage");
+
+        // getAttributes of logged in user
+        Map attributes = principal.getAttributes();
+        String username;
+        username = (String) attributes.get("name");
+
+        if (username.isEmpty()) {
+            String welcomeMessage = "";
+            modelAndView.addObject("welcomeMessage", welcomeMessage);
+        } else {
+            String welcomeMessage = "Welcome, " + username;
+            modelAndView.addObject("welcomeMessage", welcomeMessage);
+        }
 
         Integer nSpaces = Math.toIntExact(spaceRepository.count());
         modelAndView.addObject("nSpaces", nSpaces);
@@ -52,4 +69,5 @@ public class StaticPageController {
         modelAndView.addObject("nextUser", nextUser);
         return modelAndView;
     }
+
 }

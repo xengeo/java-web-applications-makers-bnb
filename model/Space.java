@@ -15,14 +15,16 @@ public class Space {
     private String name; // a second field that holds the name of each space
     private String description; // a second field that holds the description of each space
     private Integer price; // a second field that holds the price of each space
+    private String owner;
 
 
     public Space() {}   // a zero-arguments constructor
 
-    public Space(String name, String description, Integer price) { // a 3-argument constructor
+    public Space(String name, String description, Integer price, String owner) { // a 3-argument constructor
         this.name = name;
         this.description = description;
         this.price = price;
+        this.owner = owner;
     }
 
     // Getter and Setter methods for each field
@@ -34,5 +36,8 @@ public class Space {
 
     public Integer getPrice() { return this.price; }
     public void setPrice(Integer price) { this.price = price; }
+
+    public String getOwner() { return this.owner; }
+    public void setOwner(String owner) { this.owner = owner; }
 
 }
